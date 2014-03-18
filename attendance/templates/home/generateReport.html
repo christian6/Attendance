@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% block title %}Home Attendance Control{% endblock %}
+{% block style %}
+<style>
+	html{
+		background: rgb(255,214,94); /* Old browsers */
+		/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+		background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZDY1ZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZWJmMDQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+		background: -moz-linear-gradient(top,  rgba(255,214,94,1) 0%, rgba(254,191,4,1) 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,214,94,1)), color-stop(100%,rgba(254,191,4,1))); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top,  rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top,  rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top,  rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%); /* IE10+ */
+		background: linear-gradient(to bottom,  rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd65e', endColorstr='#febf04',GradientType=0 ); /* IE6-8 */
+		height: 100%;
+	}
+	body{
+		background: none;
+	}
+	.msg-client{
+		display: none;
+		float: 0;
+		left: 50%;
+		margin-left: -12em;
+		position: absolute;
+		top: 10%;
+		width: 25em;
+	}
+</style>
+{% endblock %}
+{% block script %}
+<script src="/media/js/home/report.js"></script>
+{% endblock %}
+{% block content %}
+<br>
+<div class="container">
+	<div class="well">
+		<h1 class='text-primary'><strong>Reporte de Asistencia</strong></h1>
+		<div class="row">
+			<div class="col-md-12">
+				<label class="radio text-info">
+						<input type="radio" name="report" value="t"> Generar Reporte General
+					</label>
+				<div class="t bs-callout">
+					<div class="row">
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">Año</label>
+								<select name="ganio" id="ganio" class="form-control">
+									{% for x in anios %}
+										<option value="{{x}}">{{x}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">Mes</label>
+								<select name="gmes" id="gmes" class="form-control">
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">Periodo</label>
+								<select name="qui" id="qui" class="form-control">
+									<option value="1">Primera Quincena</option>
+									<option value="2">Segunda Quincena</option>
+									<option value="3">Todo el Mes</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">
+									<a class="agen">Avanzado <span class="glyphicon glyphicon-chevron-down"></span></a>
+								</label>
+							</div>
+						</div>
+						<div class="col-md-1">
+							<button class="btn btn-primary btn-lg reportper">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</div>
+					</div>
+					<div class="bs-callout bs-callout-warning avanzadogen">
+						<small> Opciones Avanzadas </small>
+						<br>
+						<em>Buscar entre fechas.</em>
+						<div class="row">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label class="control-label">Fecha Inicio</label>
+									<input type="text" id="tfi" class="form-control fi">
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<label class="control-label">Fecha Fin</label>
+									<input type="text" id="tff" class="form-control ff">
+								</div>
+							</div>
+							<div class="col-md-1">
+								<button class="btn btn-warning tblack btn-lg">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<label class="radio text-info">
+					<input type="radio" name="report" value="p"> Generar Reporte Personal
+				</label>
+				<div class="p bs-callout">
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label class="control-label">Personal</label>
+								<select name="per" id="per" class="form-control">
+									<option value=""> -- Selecttion --</option>
+									{% for x in emp %}
+									<option value="{{x.empdni_id}}">{{x.empnom}}, {{x.empape}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">Año</label>
+								<select name="panio" id="panio" class="form-control">
+									{% for x in anios %}
+										<option value="{{x}}">{{x}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">Mes</label>
+								<select name="pmes" id="pmes" class="form-control">
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">Periodo</label>
+								<select name="pperiodo" id="pperiodo" class="form-control">
+									<option value="1">Primera Quincena</option>
+									<option value="2">Segunda Quincena</option>
+									<option value="3">Todo el Mes</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">
+									<a class="aper">Avanzado <span class="glyphicon glyphicon-chevron-down"></span></a>
+								</label>
+							</div>
+						</div>
+						<div class="col-md-1">
+							<button class="btn btn-primary btn-lg reportper">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</div>
+					</div>
+					<div class="bs-callout bs-callout-warning avanzadoper">
+						<small> Opciones Avanzadas </small>
+						<br>
+						<em>Buscar entre fechas.</em>
+						<div class="row">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label class="control-label">Fecha Inicio</label>
+									<input type="text" id="pfi" class="form-control fi">
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<label class="control-label">Fecha Fin</label>
+									<input type="text" id="pff" class="form-control ff">
+								</div>
+							</div>
+							<div class="col-md-1">
+								<button class="btn btn-warning tblack btn-lg">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="msg-client">
+	<div class="alert alert-block alert-danger">
+		<a class="close" data-dismiss="alert" type="Button">&times;</a>
+		<h4 class="msg-tittle">Oh no, Tienes un error!</h4>
+		<p>
+			Resulta que no has seleccionado un personal para poder ver el detalle de asistencia.
+		</p>
+		<p class="text-right">
+		</p>
+	</div>
+</div>
+
+{% endblock %}

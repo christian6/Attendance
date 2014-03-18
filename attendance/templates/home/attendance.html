@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Employee{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="/media/css/home/register.css">
+{% endblock%}
+{% block script %}
+<script>
+	var iload = function () {
+		console.log('imagen loaded.');
+	}
+	var iunload = function (obj) {
+		console.log('imagen unloaded.');
+		setTimeout(function() {
+			obj.src='/media/resource/images/employee.png';
+		}, 2000);
+	}
+</script>
+{% endblock %}
+{% block content %}
+<br><br><br>
+<div class="container well bs-callout-success">
+	<div class="row">
+		{% ifequal status "fail" %}
+		<div class="col-md-offset-4 col-md-4">
+			<div class="bs-callout bs-callout-warning text-warning">
+				<a class="close">&times;</a>
+				<h4><strong>Alerta!</strong></h4>
+				<p>
+					<h4><em>{{msg}}</em></h4>
+					<a class="text-warning" href="{% url 'vw_register_now' %}">Regresar</a>
+					<script>
+					setTimeout(function() { location.href="{% url 'vw_register_now' %}"; }, 5000);
+					</script>
+				</p>
+			</div>
+		</div>
+		{%endifequal%}
+		{% ifequal status "success" %}
+			<div class="col-md-5">
+				<img onLoad="iload();" onError="iunload(this);" src="/media/resource/images/{{dni}}.png" alt="460x460" class="img-thumbnail img-employee">
+			</div>
+			<div class="col-md-7">
+				<div class="bs-callout bs-callout-success">
+					<h2 class="text-info">Datos Generales</h2>
+					<p>
+						<h3>Nombres : {{emp.0.empnom}}</h3>
+					</p>
+					<p>
+						<h3>Apellidos : {{emp.0.empape}}</h3>
+					</p>
+					<p>
+						<h3>Cargo : {{emp.0.cargo.carnom}}</h3>
+					</p>
+					<p>
+						<h3>Hora : {{hour}}</h3>
+					</p>
+				</div>
+			</div>
+			<script>setTimeout(function() { location.href="{% url 'vw_register_now' %}"; }, 3000);</script>
+		{% endifequal %}
+	</div>
+</div>
+{% endblock %}

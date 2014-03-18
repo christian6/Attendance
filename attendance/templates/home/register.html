@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Register Attendance{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="/media/css/home/register.css">
+{% endblock%}
+{% block script %}
+<script>
+	var fser = new Date({% now "'Y','m','d','H','i','s'" %});
+</script>
+<script src="/media/js/home/register.js"></script>
+{%endblock%}
+{% block content%}
+<div class="container">
+	<input type="hidden" name="dform" value=>
+	<input type="hidden" name="dlarge" value="{% now 'l j, F Y' %}">
+	<h1 class="text-center head-text">Registro de Asistencia</h1>
+	<br><br>
+	<div class="row">
+			<div class="col-md-offset-4 col-md-4">
+				<div class="content-register">
+					<h5>Ingrese su DNI</h5>
+					<form name="freg" method="POST" action="{% url 'vw_show_details_employee' %}">
+						{% csrf_token %}
+						<input type="text" name="dni" maxlength="8" title="Ingrese DNI" class="form-control input-lg" REQUIRED>
+					</form>
+				</div>
+			</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-offset-4 col-md-4">
+			<h1 class="text-hour text-center"></h1>
+			<h1 class="text-center"><b>Hora Server</b></h1>
+		</div>
+	</div>
+</div>
+{% endblock%}
+{%block footer%}
+<div class="foot">
+	<h3 class="hl"></h3>
+</div>
+{%endblock%}
