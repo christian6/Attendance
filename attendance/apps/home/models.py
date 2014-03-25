@@ -1,4 +1,6 @@
+#-*- Encoding: utf-8 -*-
 from django.db import models
+import datetime
 
 # Create your models here.
 class Pais(models.Model):
@@ -100,3 +102,7 @@ class Asistencia(models.Model):
 	entrada = models.TimeField()
 	salida = models.TimeField(null=True)
 	extras = models.TimeField(null=True)
+
+	def __unicode__(self):
+		#return self.entrada.strftime("%H:%M:%S")
+		return "%s | %s | %s | %s"%(self.empdni.empnom+', '+self.empdni.empape, self.fecha.strftime('%d/%m/%Y'), self.entrada.strftime("%H:%M:%S"), self.salida)

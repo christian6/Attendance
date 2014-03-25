@@ -1,6 +1,6 @@
 $(document).ready(function () {
 	$('.t,.p,.avanzadoper,.avanzadogen').hide();
-	$('.fi,.ff').datepicker({ changeMonth: true, changeYear: true, showAnim:'slide', formatDate: 'yy-mm-dd' });
+	$('.fi,.ff').datepicker({ changeMonth: true, changeYear: true, showAnim:'slide', dateFormat: 'yy-mm-dd' });
 	$('input[name=report]').change(function () {
 		var item = this;
 		if (item.checked) {
@@ -40,6 +40,25 @@ $(document).ready(function () {
 			agen = true;
 		};
 	});
+	// reporte general
+	$('.reportgen').click(function () {
+		var $anio = $('#ganio');
+		var $mes = $('#gmes');
+		var $periodo = $('#gperiodo');
+		if ($anio.val() != '') {
+			if ($mes.val() != null) {
+				if ($periodo.val() != '') {
+					window.open('/allhours/report/?anio='+$anio.val()+'&mes='+$mes.val()+'&periodo='+$periodo.val()+'&type=n');
+				}else{
+					alert('No se a seleccionado un Periodo.');
+				};
+			}else{
+				alert('No se a seleccionado un mes para el reporte.')
+			};
+		}else{
+			alert('No se a seleccionado un año para el reporte.');
+		};
+	});
 	// reporte detallado
 	$('.reportper').click(function () {
 		//location.href=;
@@ -51,7 +70,7 @@ $(document).ready(function () {
 			if ($anio.val() != '') {
 				if ($mes.val() != null) {
 					if ($periodo.val() != '') {
-						window.open('/single/?dni='+$('#per').val()+'&anio='+$anio.val()+'&mes='+$mes.val()+'&periodo='+$periodo.val());
+						window.open('/single/?dni='+$('#per').val()+'&anio='+$anio.val()+'&mes='+$mes.val()+'&periodo='+$periodo.val()+'&type=n');
 					}else{
 						alert('No se a seleccionado un Periodo.');
 					};
@@ -66,6 +85,21 @@ $(document).ready(function () {
 		};
 	});
 	// 
+	$('.btn-advance-per').click(function () {
+		var $fi = $('#pfi'), $ff = $('#pff');
+		var $dni = $("#per");
+		if ($fi.val() == '') { alert('Ingrese Fecha de Inicio. para empezar a buscar.\n\rlas fecha no pueden estar vacias.'); return; };
+		if ($ff.val() == '') { alert('Ingrese Fecha de Fin. para empezar a buscar.\n\rlas fecha no pueden estar vacias.'); return;};
+		if ($dni.val() == '') { alert('seleccione a una personal por los menos.'); return; };
+		if ($fi.val() != '' && $ff.val()) {
+			var arfi = $fi.val();
+			arfi = arfi.split('-');
+			var arff = $ff.val();
+			arff = arff.split('-');
+			console.log(arfi);
+			window.open('/single/?type=a&dni='+$dni.val()+'&ayeari='+arfi[0]+'&amonthi='+arfi[1]+'&adayi='+arfi[2]+'&ayearf='+arff[0]+'&amonthf='+arff[1]+'&adayf='+arff[2]);
+		};
+	});
 	$('#ganio').click(function () {
 		getterMonths('ganio','gmes');
 	});
