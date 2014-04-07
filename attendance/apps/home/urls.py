@@ -8,6 +8,8 @@ urlpatterns = patterns('attendance.apps.home.views',
 	url(r'^test/$','view_test_pdf',name='wv_test'),
 	url(r'^single/$','rpt_single_hours',name='rpt_single'),
 	url(r'^allhours/report/$','rpt_all_hours',name='rpt_allhours'),
+	url(r'^mantenice/add/$','view_addAttendance',name='vw_addattendance'),
 	## request ajax method JSON
 	url(r'^ws/request/months/$','view_getter_month'),
+	url(r'^ws/save/attendance/$','ws_save_attendance'),
 )

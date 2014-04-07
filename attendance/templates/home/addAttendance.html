@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Home Attendance Control{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="/media/css/home/home.css">
+{% endblock %}
+{% block script %}
+<script src="/media/js/home/addAttendance.js"></script>
+{% endblock %}
+{% block content %}
+<h1 class="text-center">
+	<strong>Control de Asistencia</strong><br>
+	<small>Control Personal</small>
+	<span class="glyphicon glyphicon-user"></span>
+</h1>
+<br>
+<br>
+<br>
+<div class="container">
+	<div class="well">
+		<div class="row">
+			<div class="col-md-7">
+				{% csrf_token %}
+				<div class="form-group">
+					<label for="controls" class="control-label">Empleados</label>
+					<select name="emp" id="emp" class="form-control">
+						<option value=""> --- Selection --- </option>
+						{% for x in emp %}
+							<option value="{{x.empdni_id}}">{{x.empnom}}, {{x.empape}}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="form-group">
+					<br><br>
+					<a href="#" class="text-primary tnow">Hoy</a>	
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="form-group">
+					<label class="control-label">Selected</label>
+					<div class="input-group">
+						<input type="text" class="form-control inow">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>	
+					</div>
+				</div>
+			</div>
+			<datalist id="timepre">
+				<option value="00:00" label="00:00">
+				<option value="08:00" label="08:00">
+				<option value="17:30" label="17:30">
+			</datalist>
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="form-control" class="control-label">Hora Entrada</label>
+					<div class="input-group">
+						<input type="time" class="intime form-control" list="timepre">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-time"></span>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="form-control" class="control-label">Hora Salida</label>
+					<div class="input-group">
+						<input type="time" class="outtime form-control" list="timepre">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-time"></span>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="form-group">
+					<br>
+					<button type="Button" class="btn btn-primary tblack btnadd">
+						<span class="glyphicon glyphicon-ok"></span> Guardar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

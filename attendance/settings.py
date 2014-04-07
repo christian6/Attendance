@@ -1,3 +1,4 @@
+#-*- Enconding=utf-8 -*-
 # Django settings for attendance project.
 import os
 

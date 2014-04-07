@@ -23,9 +23,7 @@ def view_getter_month(request):
 			m = models.Asistencia.objects.dates('fecha','month').filter(fecha__year=request.GET['anio'])
 			m_name = { 1:u'ENERO',2:u'FEBRERO',3:u'MARZO',4:u'ABRIL',5:u'MAYO',6:u'JUNIO',7:u'JULIO',8:u'AGOSTO',9:u'SETIEMBRE',10:u'OCTUBRE',11:u'NOVIEMBRE',12:u'DICIEMBRE', }
 			for x in m:
-				print x
-				print 'aqui'
-				print x.strftime('%m')
+				#print x.strftime('%m')
 				months[int(x.strftime('%m'))] = m_name[int(x.strftime('%m'))]
 
 			months['status'] = 'success'
@@ -544,13 +542,16 @@ def rpt_all_hours(request):
 				emp = []
 				if request.GET['type'] == 'n':
 					# verificar que las fecha ingresada
-					print 'optin normal'
+					print 'option normal'
+					print e.empdni_id + ' aqui dni antes de anio '
 					years = models.Asistencia.objects.filter(empdni=e.empdni_id,fecha__year=request.GET['anio']).count()
+					# print years + ' aqui anios '
 					if years > 0:
 						# verificar mes que tenga registro si falla el reporte
 						print e.empdni_id +' aqui el DNI que se gestiona'
 						print "%02d"%int(request.GET['mes'])
 						months = models.Asistencia.objects.filter(empdni=e.empdni_id,fecha__year=request.GET['anio'],fecha__month="%02d"%int(request.GET['mes'])).count()
+						print 'mes encontrado'
 						if months > 0:
 							# vefiricar que el periodo contenga datos para realizar el reporte
 							periodo = 0
@@ -578,16 +579,21 @@ def rpt_all_hours(request):
 								if periodo > 0:
 									emp = models.Asistencia.objects.filter(empdni=e.empdni_id,fecha__range=(de,hasta))
 							print 'mes encontrado continue'
+							print emp
 						else:
+							# si no se encuentra registros para el empleado salta al siguiente
+							continue
 							emp = []
 							print 'mes menor o igual que cero'
 							# redireccionar a otra pagina y mostrar mensaje
-							messages.error(request, 'No se han encontrado datos para este mes!')
+							#messages.error(request, 'No se han encontrado datos para este mes!')
 							#raise Http404('Method no proccess')
 					else:
+						# si no se encuentra registros para el empleado salta al siguiente
+						continue
 						# redireccionar a otra pagina para mostrar mensaje
-						messages.error(request, 'No se han encontrado datos para este Año!')
-						raise Http404('Method no proccess')
+						#messages.error(request, 'No se han encontrado datos para este Año!')
+						#raise Http404('Method no proccess')
 				elif request.GET['type'] == 'a':
 					print 'dentro de advance'
 					desde = datetime.date( int(request.GET['ayeari']),int(request.GET['amonthi']),int(request.GET['adayi']) )
@@ -595,6 +601,9 @@ def rpt_all_hours(request):
 					exists = models.Asistencia.objects.filter(empdni=e.empdni_id,fecha__range=(desde,hasta)).count()
 					if exists > 0:
 						emp = models.Asistencia.objects.filter(empdni=e.empdni_id,fecha__range=(desde,hasta))
+					else:
+						# si no se encuentra registros para el empleado salta al siguiente
+						continue
 				# Total de Horas
 				hf = 0
 				mf = 0
@@ -859,3 +868,62 @@ def rpt_all_hours(request):
 			#raise Http404('Method Proccess Fail')
 	else:
 		raise Http404('Method faild GET')
+
+def view_addAttendance(request):
+	try:
+		if request.method == 'GET':
+			emp = models.Empleado.objects.values('empdni_id','empnom','empape').all().order_by('empape').distinct()
+			ctx = { 'emp': emp }
+			return render_to_response('home/addAttendance.html',ctx,context_instance=RequestContext(request))
+	except Exception, e:
+		raise e
+
+def ws_save_attendance(request):
+	from django.utils import simplejson
+	data = {}
+	try:
+		if request.method == 'POST':
+			import datetime
+			# verificamos si ya tiene registro
+			count = models.Asistencia.objects.filter(empdni_id=request.POST['emp'],fecha=datetime.datetime.strptime(request.POST['fec'],'%Y-%m-%d').date()).count()
+			if count == 0:
+				hx = models.HorarioPersonal.objects.filter(empdni_id=request.POST['emp'],horario__flag=True,empdni__flag=True,empdni__empdni_id=request.POST['emp'])[:1]
+				# preguntar si existe horario
+				"""
+				hs=None
+				he=None
+				if hx == []:
+					# obteniendo horario por defecto
+					hx = models.Horario.objects.filter(flag=True,tipo='CENTRAL',proyecto_id__isnull=True)[:1]
+					if date.today().strftime('%A') == 'Saturday':
+						hs = hx[0].satfin
+						he = hx[0].entrada
+					else:
+						hs = hx[0].salida
+						he = hx[0].entrada
+				else:
+					if date.today().strftime('%A') == 'Saturday':
+						hs = hx[0].satfin
+						he = hx[0].entrada
+					else:
+						he = hx[0].horario.entrada
+						hs = hx[0].horario.salida
+				#formato de hora
+						format = '%H:%M:%S'
+				"""
+				aobj = models.Asistencia()
+				aobj.empdni_id= request.POST['emp']
+				aobj.fecha= datetime.datetime.strptime(request.POST['fec'],'%Y-%m-%d').date()
+				aobj.entrada= datetime.datetime.strptime( request.POST['in'], "%H:%M" ).time()
+				aobj.salida= datetime.datetime.strptime( request.POST['out'], "%H:%M" ).time()
+				aobj.extra= datetime.time(0,0,0)
+				aobj.save()
+
+				data['status']='true'
+			else:
+				data['status']='ya existe'
+	except Exception, e:
+		raise e
+		data['status']='false'
+	data = simplejson.dumps(data)
+	return HttpResponse(data, mimetype='application/json')
