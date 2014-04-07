@@ -95,6 +95,9 @@ class HorarioPersonal(models.Model):
 	horario = models.ForeignKey(Horario, to_field='horario_id')
 	empdni = models.ForeignKey(Empleado, to_field='empdni_id')
 
+	def __unicode__(self):
+		return "%s - %s, %s"%(self.horario.tipo,self.empdni.empnom,self.empdni.empape)
+
 class Asistencia(models.Model):
 	empdni = models.ForeignKey(Empleado, to_field='empdni_id', null=False)
 	#horario = models.ForeignKey(Horario, to_field='horario_id')
