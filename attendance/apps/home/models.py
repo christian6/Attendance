@@ -84,8 +84,8 @@ class Horario(models.Model):
 	satini = models.TimeField(null=True)
 	satfin = models.TimeField(null=True)
 	#hextra = models.TimeField(null=True)
-	priceex = models.FloatField(default=0,null=True,blank=True)
-	pricefes = models.FloatField(default=0,null=True,blank=True)
+	#priceex = models.FloatField(default=0,null=True,blank=True)
+	#pricefes = models.FloatField(default=0,null=True,blank=True)
 	flag = models.BooleanField(default=True)
 
 	def __unicode__(self):
